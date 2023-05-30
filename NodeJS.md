@@ -1,7 +1,22 @@
+# Contents
 1. [What is NodeJS?](#what-is-node-js)
 2. [What is callback hell?](#what-is-callback-hell)
 3. [What is Inversion Of Control?](#what-is-inversion-of-control)
 4. [How to escape from a callback hell?](#how-to-escape-from-a-callback-hell)
+5. [What is Promis.all()?](#what-is-promisall)
+6. [How to choose node_modules?](#how-to-choose-node_modules)
+7. [What is the difference between Authentication and Authorization](#what-is-the-difference-between-authentication-and-authorization)
+8. [How do you secure the API?](#how-do-you-secure-the-api)
+9. [How to build authentication api?](#how-to-build-authentication-api)
+10. [Explain async await and why we use it?](#explain-async-await-and-why-we-use-it)
+11. [What is javascript Promise?](#what-is-javascript-promise)
+12. [How to write unit test with mocha framework and chai assertion library?](#how-to-write-unit-test-with-mocha-framework-and-chai-assertion-library)
+13. [What is callback?](#what-is-callback)
+14. [setTimeout vs setInterval](#settimeout-vs-setinterval)
+15. [Streams in NodeJS](#streams-in-nodejs)
+16. [What is pipe method in NodeJS/ Stream chaining](#what-is-pipe-method-in-nodejs-stream-chaining)
+17. [What is child process](#what-is-child-process)
+18. [How to scale NodeJs applications using the cluster module?](#how-to-scale-nodejs-applications-using-the-cluster-module)
 
 
 ## What is node js?
@@ -9,6 +24,8 @@ Node.js is the JavaScript runtime environment that is based on Google’s V8 Eng
 Node.js application runs only on a single thread and by that, It means whether that Node.js application is being used by 5 users or 5 million users, it will only run on a single thread which makes the Node.js application blockable (which means that a single line of code can block the whole app because an only single thread is being used). So, to keep the Node.js application running, asynchronous code must be used everywhere having callback functions because as we know that asynchronous code keeps on running in the background and the callback gets executed as soon as the promise gets resolved rather than synchronous code which blocks the whole application until it gets finished executing. But, we can still use synchronous code however at some place in our application and that place is before our application enters Event-loop. Event-loop is what allows Node.js applications to run non-blocking asynchronous I/O-based operations i.e, all the asynchronous code is managed and executed within the event-loop and before that, we can use our synchronous code which is in this case known as Top-Level code
 
 ![](./images/event_loop.png)
+
+**[⬆ Back to Top](#contents)**
 
 ## What is callback hell?
 Callback Hell is essentially nested callbacks stacked below one another forming a pyramid structure. Every callback depends on/waits for the previous callback, thereby making a pyramid structure that affects the readability and maintainability of the code.
@@ -24,9 +41,12 @@ setTimeout(()=> {
 }, 1000)
 ```
 
+**[⬆ Back to Top](#contents)**
+
 ## What is Inversion Of Control?
 when we pass a function to other function as a callback we are giving the called function the control of whether to even call it or not or maybe call it in a wrong context. For example a success callback is called when an error occours inside a called function (maybe due to human error while writing the code  for called function), this type of giving up of control over our functions is known as inversion of control.
 
+**[⬆ Back to Top](#contents)**
 
 ## How to escape from a callback hell?
 * JavaScript provides an easy way of escaping from callback hell. This is done by event queue and promises.
@@ -35,6 +55,8 @@ when we pass a function to other function as a callback we are giving the called
 * Promises use .fetch() method to fetch an object from the network. It also uses .catch() method to catch any exception when any block fails.
 * So these promises are put in the event queue so that they don’t block subsequent JS code. Also once the results are returned, the event queue finishes its operations.
 * There are also other helpful keywords and methods like async, wait, set timeout() to simplify and make better use of callbacks.
+
+**[⬆ Back to Top](#contents)**
 
 ## What is Promis.all()?
 It is actually a method of Promise object that returns a single Promise after receiving one or more promises as input. when all of the Promises in the input are satisfied, the returning promise is fulfilled. when any of the inputs, or promises are refused, it rejects a promise with this first rejection reason.
@@ -49,6 +71,8 @@ try {
   console.log(error);
 }
 ```
+
+**[⬆ Back to Top](#contents)**
 
 ## How to choose node_modules?
 ### Factors
@@ -66,6 +90,8 @@ updated: As of npm 1.2.20 and forward, modules without repository fields will sh
 * Number of commits
 * Are issues being closed on GitHub, or have the same issues been open for a long time?
 
+**[⬆ Back to Top](#contents)**
+
 ## What is the difference between Authentication and Authorization
 -------------------------------------------------------------------
 | Authentication | Authorization |
@@ -75,6 +101,8 @@ updated: As of npm 1.2.20 and forward, modules without repository fields will sh
 |Authentication determines whether the person is user or not.   | While it determines What permission does the user have?
 |Popular Authentication Techniques- Password-Based Authentication, Passwordless Authentication,
 2FA/MFA (Two-Factor Authentication / Multi-Factor Authentication), Single sign-on (SSO), Social authentication  |Popular  Authorization Techniques- Role-Based Access Controls (RBAC), JSON web token (JWT) Authorization, SAML Authorization, OpenID Authorization, OAuth 2.0 Authorization
+
+**[⬆ Back to Top](#contents)**
 
 ## How do you secure the API?
 ### Use throttling and rate-limiting: 
@@ -158,6 +186,8 @@ const corsOption = {
 app.use(cors(corsOption))
 ```
 
+**[⬆ Back to Top](#contents)**
+
 ## How to build authentication api?
 ### Method 1
 ```
@@ -220,8 +250,310 @@ module.exports.login = async function(req, res, next) {
 }
 ```
 
+**[⬆ Back to Top](#contents)**
 
+## Explain async await and why we use it?
+We all know that JavaScript is Synchronous in nature which means that it has an event loop that allows you to queue up an action that won’t take place until the loop is available sometime after the code that queued the action has finished executing.
+But there are a lot of functionalities in our program which make our code Asynchronous and one of them is the Async/Await functionality. Async/Await is the extension of promises which we get as support in the language. 
 
+**Async:** It simply allows us to write promises-based code as if it was synchronous and it checks that we are not breaking the execution thread. It operates asynchronously via the event loop. Async functions will always return a value. It makes sure that a promise is returned and if it is not returned then JavaScript automatically wraps it in a promise which is resolved with its value.
 
+**Await:** Await is used to wait for the promise. It could be used within the async block only. It makes the code wait until the promise returns a result. It only makes the async block wait.
+```
+const fs = require('fs');
+const util = require('util');
 
+const readfile = util.promisify(fs.readFile);
 
+async function readFile(){
+    try{
+        const data = await readfile('./README.md');
+        console.log(data);
+    }catch(err){
+        console.log(err)
+    }
+}
+
+readFile()
+```
+
+**[⬆ Back to Top](#contents)**
+
+## What is javascript Promise?
+Promises are used to handle asynchronous operations in JavaScript. They are easy to manage when dealing with multiple asynchronous operations where callbacks can create callback hell leading to unmanageable code.
+
+Promises are the ideal choice for handling asynchronous operations in the simplest manner. They can handle multiple asynchronous operations easily and provide better error handling than callbacks and events.
+A Promise has four states: 
+* fulfilled: Action related to the promise succeeded
+* rejected: Action related to the promise failed
+* pending: Promise is still pending i.e. not fulfilled or rejected yet
+* settled: Promise has fulfilled or rejected
+```
+function getPromise(flag) {
+    return new Promise((resolve, reject)=> {
+        if(flag){
+            resolve('Its Resolved')
+        }else{
+            const err = new Error('Something error happened')
+            reject(err)
+        }
+    })
+}
+
+getPromise(true)
+    .then(result=> console.log(result))
+    .catch(err=> console.log(err))
+```
+
+## How to write unit test with mocha framework and chai assertion library?
+**describe() and it()**
+
+The `it` call identifies each individual tests but by itself it does not tell Mocha anything about how your test suite is structured. How you use the `describe` call is what gives structure to your test suite.
+```
+const expect = require('chai').expect;
+const foo = 'bar';
+const a = {b: 1};
+
+describe('Unit Testing Example', ()=> {
+    before(()=> {
+        console.log('It will execute before test start')
+    });
+    beforeEach(()=> {
+        console.log('It will execute before each test start')
+    });
+
+    it('2 + 2 will be equal to 4', ()=> {
+        expect(2+2).equal(4);
+    });
+
+    it('String match', ()=> {
+        expect(foo).to.be.a('string');
+        expect(foo).to.equal('bar');
+        expect(foo).to.have.length(3);
+    });
+
+    it('Testing Object', ()=> {
+        expect(a).to.have.property('b')
+    });
+
+    
+    afterEach(()=> {
+        console.log('It will execute after each test')
+    });
+    after(()=> {
+        console.log('It will execute after all test')
+    });
+})
+```
+
+**[⬆ Back to Top](#contents)**
+
+## [What is Callback](https://www.geeksforgeeks.org/javascript-callbacks/)
+A callback is a function that is passed as an argument to another function, and is called after the main function has finished its execution. The main function is called with a callback function as its argument, and when the main function is finished, it calls the callback function to provide a result. Callbacks allow you to handle the results of an asynchronous operation in a non-blocking manner, which means that the program can continue to run while the operation is being executed.
+```
+function mainFunction(callback) {
+    setTimeout(()=> {
+        callback('Operation completed')
+    }, 1000);
+}
+
+mainFunction(function (result) {
+    console.log("Result: ", result);
+})
+```
+
+**[⬆ Back to Top](#contents)**
+
+## setTimeout vs setInterval
+* The setTimeout() method is used to call a function after a certain period of time. 
+* The setInterval() Javascript method is used to call a function repeatedly at a specified interval of time. 
+* setTimeout() is cancelled by clearTimeout() method, and 
+* setInterval() is cancelled by clearInterval() method.
+```
+var intervalID = setInterval(alert(), 1000); // Will alert every second.
+// clearInterval(intervalID); // Will clear the timer.
+
+setTimeout(alert(), 1000); // Will alert once, after a second.
+```
+
+**[⬆ Back to Top](#contents)**
+
+## [Streams in NodeJS](https://www.youtube.com/watch?v=DfIfgd9TjB4&ab_channel=Pepcoding)
+Streams are a type of data-handling methods and are used to read or write input into output sequentially/ chunk by chunk. Streams are used to handle reading/writing files or exchanging information in an efficient way.
+
+Note: What makes streams powerful while dealing with large amounts of data is that instead of reading a file into memory all at once, streams actually read chunks of data, processing its content data without keeping it all in memory.
+
+**Types of Streams in Node.js:**
+There are namely four types of streams in Node.js.
+* Writable: Write data to the destination. Example: fs.createWriteStream().
+* Readable: Read data from source. Example: fs.createReadStream().
+* Duplex: Streams that are both, Writable as well as Readable. Example: net.socket.
+* Transform: Streams that can modify or transform the data as it is written and read. Example: zlib.createDeflate
+
+`readStream.js`
+```
+const fs = require('fs');
+
+let content = "";
+
+const readStream = fs.createReadStream('./streams/input.txt');
+
+readStream.on('data', (chunk)=> {
+    content+= chunk;
+});
+
+readStream.on('end', ()=> {
+    console.log(content)
+});
+
+readStream.on('error', (err)=> {
+    console.log(err.stack)
+});
+```
+
+`writeStream.js`
+```
+const fs = require('fs');
+
+const writeStream = fs.createWriteStream('./streams/output.txt');
+
+writeStream.write('Hi Surajit', 'utf8');
+
+writeStream.end();
+
+writeStream.on('finish', ()=> {
+    console.log('Writing Completed')
+})
+```
+
+**[⬆ Back to Top](#contents)**
+
+## [What is pipe method in NodeJS/ Stream chaining](https://www.geeksforgeeks.org/node-js-stream-readable-pipe-method/)
+The pipe() method was added in Node version 0.9. 4. We use this method to join or pipe two streams together. Basically, this method is called on a readable stream to pass data to write onto a writable stream.
+```
+
+// Node.js program to demonstrate the    
+// readable.pipe() method
+  
+// Accessing fs module
+var fs = require("fs");
+ 
+// Create a readable stream
+var readable = fs.createReadStream('input.txt');
+ 
+// Create a writable stream
+var writable = fs.createWriteStream('output.txt');
+ 
+// Calling pipe method
+readable.pipe(writable);
+ 
+console.log("Program Ended");
+```
+
+**[⬆ Back to Top](#contents)**
+
+## [What is child process](https://www.freecodecamp.org/news/node-js-child-processes-everything-you-need-to-know-e69498fe970a/)
+
+Video Refernce: https://www.youtube.com/watch?v=bbmFvCbVDqo&ab_channel=MafiaCodes
+
+Single-threaded, non-blocking performance in Node.js works great for a single process. But eventually, one process in one CPU is not going to be enough to handle the increasing workload of your application.
+
+No matter how powerful your server may be, a single thread can only support a limited load.
+
+`The fact that Node.js runs in a single thread does not mean that we can’t take advantage of multiple processes and, of course, multiple machines as well.`
+
+We can easily spin a child process using Node’s child_process module and those child processes can easily communicate with each other with a messaging system.
+
+The child_process module enables us to access Operating System functionalities by running any system command inside a, well, child process.
+
+We can control that child process input stream, and listen to its output stream. We can also control the arguments to be passed to the underlying OS command, and we can do whatever we want with that command’s output.
+
+There are four different ways to create a child process in Node: spawn(), fork(), exec(), and execFile().
+
+N.B: `exec` and `execFIle` taken all the output into buffer. If there huge statndard output then we wont be able to use this command. It will show error `maxBuffer length exceed`
+
+Thats why in such case we need `spawn()` method.
+
+```
+const {exec} = require('child_process');
+
+exec('dir', (err, output)=> {
+    if(err){
+        console.log(err.stack);
+        return;
+    }
+    console.log(output);
+})
+```
+```
+const {execFile} = require('child_process');
+
+execFile('someFile.exe', (err, output)=> {
+    if(err){
+        console.log(err.stack);
+        return;
+    }
+    console.log(output);
+})
+```
+```
+const {spawn} = require('child_process');
+
+const child = spawn('where', ['*']);
+
+child.stdout.on('data', (data)=> {
+    console.log(data);
+});
+
+child.on('error', (err)=> {
+    console.log(err.stack)
+});
+
+child.on('exit', (code, signal)=> {
+    if(code) console.log('Process exit with code ', code);
+    if(signal) console.log('Process exit with signal ', signal);
+    console.log('👍👍')
+})
+```
+**fork()**
+Reference: 
+1. https://github.com/trulymittal/nodejs-child-process-tutorial/blob/master/fork_demo.js
+2. https://www.youtube.com/watch?v=7cFNTD73N88&ab_channel=MafiaCodes
+
+**[⬆ Back to Top](#contents)**
+
+## [How to scale NodeJs applications using the cluster module?](https://www.youtube.com/watch?v=9RLeLngtQ3A&ab_channel=MafiaCodes)
+Since v6.0.X Node.js has included the cluster module straight out of the box, which makes it easy to set up multiple node workers that can listen on a single port. Note that this is NOT the same as the older learnboost "cluster" module available through npm.
+```
+const http = require('http');
+const cluster = require('cluster');
+const os = require('os');
+
+let numCpu = os.cpus.length;
+
+if(cluster.isMaster){
+  numCpu = numCpu === 0 ? 2 : numCpu;
+  for(let i = 0; i< numCpu; i++){
+    cluster.fork();
+  }
+  cluster.on('exit', (worker, code, signal)=> {
+    cluster.fork();
+  })
+}else{
+  http.Server((req, res)=> {}).listen(3000, ()=> {
+    console.log(process.pid)
+  });
+}
+```
+Workers will compete to accept new connections, and the least loaded process is most likely to win. It works pretty well and can scale up throughput quite well on a multi-core box.
+
+If you have enough load to care about multiple cores, then you are going to want to do a few more things too:
+
+1. Run your Node.js service behind a web-proxy like Nginx or Apache - something that can do connection throttling (unless you want overload conditions to bring the box down completely), rewrite URLs, serve static content, and proxy other sub-services.
+2. Periodically recycle your worker processes. For a long-running process, even a small memory leak will eventually add up.
+3. Setup log collection / monitoring
+
+PS: There's a discussion between Aaron and Christopher in the comments of another post (as of this writing, its the top post). A few comments on that:
+
+* A shared socket model is very convenient for allowing multiple processes to listen on a single port and compete to accept new connections. Conceptually, you could think of preforked Apache doing this with the significant caveat that each process will only accept a single connection and then die. The efficiency loss for Apache is in the overhead of forking new processes and has nothing to do with the socket operations.
+* For Node.js, having N workers compete on a single socket is an extremely reasonable solution. The alternative is to set up an on-box front-end like Nginx and have that proxy traffic to the individual workers, alternating between workers for assigning new connections. The two solutions have very similar performance characteristics. And since, as I mentioned above, you will likely want to have Nginx (or an alternative) fronting your node service anyways, the choice here is really between:

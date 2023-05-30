@@ -1,3 +1,8 @@
+# Contents
+1. [What is the difference between array.forEach() and array.map()?](#what-is-the-difference-between-arrayforeach-and-arraymap)
+2. [What is closure?](#what-is-closure)
+3. [What is currying function in JavaScript ?](#what-is-currying-function-in-javascript)
+
 ## What is the difference between array.forEach() and array.map()?
 
 * Array.forEach() method is used to iterate over an array.
@@ -6,6 +11,8 @@
 const numbers = [1,2,3,4];
 const evenNumbers = numbers.map(number=> number * 2); // [2,4,6,8]
 ```
+
+**[⬆️ Back to Top](#contents)**
 
 ## What is closure?
 * Function along with its lexical scope bundled together form a closure
@@ -26,6 +33,9 @@ function outer() {
 
 console.log(outer()()); // mysecret
 ```
+
+**[⬆️ Back to Top](#contents)**
+
 ## What is currying function in JavaScript ?
 It is a technique in functional programming, that transforms the function of multiple arguments into several functions of a single argument in sequence. We simply wrap a function inside a function, which means we are going to return a function from another function to obtain this kind of translation.
 
@@ -41,4 +51,5 @@ function calculateVolume(length) {
 console.log(calculateVolume(4)(5)(6)); // 120
 ```
 
+**[⬆️ Back to Top](#contents)**
 

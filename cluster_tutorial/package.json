@@ -1,0 +1,16 @@
+{
+  "name": "cluster_tutorial",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "cluster": "node serverWithCluster.js",
+    "without-cluster": "node serverWithoutCluster.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
