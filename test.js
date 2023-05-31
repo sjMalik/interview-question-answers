@@ -82,22 +82,98 @@
 //   console.log("Result: ", result);
 // })
 
-const http = require('http');
-const cluster = require('cluster');
-const os = require('os');
+// const http = require('http');
+// const cluster = require('cluster');
+// const os = require('os');
 
-let numCpu = os.cpus.length;
+// let numCpu = os.cpus.length;
 
-if(cluster.isMaster){
-  numCpu = numCpu === 0 ? 2 : numCpu;
-  for(let i = 0; i< numCpu; i++){
-    cluster.fork();
-  }
-  cluster.on('exit', (worker, code, signal)=> {
-    cluster.fork();
-  })
-}else{
-  http.Server((req, res)=> {}).listen(3000, ()=> {
-    console.log(process.pid)
-  });
-}
+// if(cluster.isMaster){
+//   numCpu = numCpu === 0 ? 2 : numCpu;
+//   for(let i = 0; i< numCpu; i++){
+//     cluster.fork();
+//   }
+//   cluster.on('exit', (worker, code, signal)=> {
+//     cluster.fork();
+//   })
+// }else{
+//   http.Server((req, res)=> {}).listen(3000, ()=> {
+//     console.log(process.pid)
+//   });
+// }
+
+
+// const http = require('http');
+// const host = 'localhost';
+// const port = 3000;
+
+// const server = http.createServer((req, res)=> {
+//   res.statusCode = 200;
+//   res.setHeader('Content-Type', 'text/plain');
+//   res.end('Hello World');
+// })
+
+// server.listen(port, host, ()=> {
+//   console.log(`Server running @ http://localhost:3000`)
+// });
+
+
+// const express = require('express');
+// const host = 'localhost';
+// const port = 3000;
+
+// const app = express();
+
+// app.get('/', (req, res)=> {
+//   res.status(200).send('Hello World')
+// })
+
+// app.listen(port, host, ()=> {
+//   console.log(`Server running @ http://localhost:3000`)
+// })
+
+// const fs = require('fs');
+
+// try{
+//     const data = fs.readFileSync('./input.txt');
+// }catch(err){
+//     console.log(err)
+// }
+// console.log('Some important code to execute');
+
+// fs.readFile('./input.txt', (err, data)=> {
+//   if(err){
+//     console.log(err);
+//     return
+//   }
+//   console.log(data)
+// });
+// console.log('Some important code to execute');
+
+// const util = require('util');
+
+// const readfile = util.promisify(fs.readFile);
+
+// readfile('./input.txt').then(data=> console.log(data))
+//   .catch(err=> console.log(err.stack));
+// (async ()=> {
+//   try{
+//     const data = await readfile('./input.txt');
+//   }catch(err){
+//     console.log(err.stack)
+//   }
+// })();
+
+// console.log('Some important code to execute');
+
+const {spawn} = require('child_process');
+
+const child = spawn('dir', ['']);
+
+child.stdout.on('data', (data)=> {
+  console.log(data);
+});
+
+child.on('error', (err)=> {
+  console.log(err.stack)
+})

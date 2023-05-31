@@ -6,6 +6,11 @@
 5. [Type vs Interface](#type-vs-interface)
 6. [Classes](#classes)
 7. [Access Modifiers](#access-modifiers)
+8. [Generics](#generics)
+9. [What is "Decorators" in TypeScript?](#what-is-decorators-in-typescript)
+10. [Literal types](#literal-types)
+11. [keyof only](#keyof-only)
+12. [keyof typeof](#keyof-typeof)
 
 
 ## Typescript
@@ -256,5 +261,160 @@ Property internalSecret is `protected` and only accessible within class or in th
 Property privateSecret is `private` and only accessible within class
 
 Classes may have `static` members. These members aren’t associated with a particular instance of the class. They can be accessed through the class constructor object itself
+
+**[⬆️ Back to Top](#contents)**
+
+## Generics
+```
+function identity(arg: any): any {
+  return arg;
+}
+```
+
+While using any is certainly generic in that it will cause the function to accept any and all types for the type of arg, we actually are losing the information about what that type was when the function returns. If we passed in a number, the only information we have is that any type could be returned.
+
+Instead, we need a way of capturing the type of the argument in such a way that we can also use it to denote what is being returned. Here, we will use a type variable, a special kind of variable that works on types rather than values.
+```
+function identity<Type>(arg: Type): Type {
+  return arg;
+}
+```
+
+We’ve now added a type variable Type to the identity function. This Type allows us to capture the type the user provides (e.g. number), so that we can use that information later. Here, we use Type again as the return type. On inspection, we can now see the same type is used for the argument and the return type. This allows us to traffic that type information in one side of the function and out the other.
+
+We say that this version of the identity function is generic, as it works over a range of types. 
+```
+function sortItems<T>(items: T[], compareFun: (a:T, b:T)=> number): T[] {
+    return items.sort(compareFun)
+}
+
+console.log(sortItems([2,5,1,10,4], (a,b)=> a-b));
+console.log(sortItems(['sura', 'avi', 'abir'], (a,b)=> a.localeCompare(b)))
+```
+```
+/** A class definition with a generic parameter */
+class Queue<T> {
+  private data = [];
+  push = (item: T) => this.data.push(item);
+  pop = (): T => this.data.shift();
+}
+
+const queue = new Queue<number>();
+queue.push(0);
+queue.push("1"); // ERROR : cannot push a string. Only numbers allowed
+```
+**[⬆️ Back to Top](#contents)**
+
+## What is "Decorators" in TypeScript? 
+A Decorator is a special kind of declaration that can be attached to a class declaration, method, accessor, property, or parameter. Decorators are functions that take their target as the argument. With decorators we can run arbitrary code around the target execution or even entirely replace the target with a new definition.
+
+There are 4 things we can decorate in ECMAScript2016 (and Typescript): constructors, methods, properties and parameters.
+
+**[⬆️ Back to Top](#contents)**
+
+## [Literal types](https://stackoverflow.com/questions/55377365/what-does-keyof-typeof-mean-in-typescript)
+Literal types in TypeScript are more specific types of string, number or boolean.
+A literal type can be declared as following:
+
+```
+type Greeting = "Hello"
+```
+
+This means that the object of type Greeting can have only a string value "Hello" and no other string value or any other value of any other type as shown in the following code:
+
+```
+let greeting: Greeting
+greeting = "Hello" // OK
+greeting = "Hi"    // Error: Type '"Hi"' is not assignable to type '"Hello"'
+```
+
+Literal types are not useful on their own, however when combined with union types, type aliases and type guards they become powerful.
+
+Following is an example of union of literal types:
+```
+type Greeting = "Hello" | "Hi" | "Welcome"
+```
+Now the object of type Greeting can have the value either "Hello", "Hi" or "Welcome".
+```
+let greeting: Greeting
+greeting = "Hello"       // OK
+greeting = "Hi"          // OK
+greeting = "Welcome"     // OK
+greeting = "GoodEvening" // Error: Type '"GoodEvening"' is not assignable to type 'Greeting'
+```
+
+**[⬆️ Back to Top](#contents)**
+
+## keyof only
+keyof of some type T gives you a new type that is a union of literal types and these literal types are the names of the properties of T. The resulting type is a subtype of string.
+
+For example, consider the following interface:
+```
+interface Person {
+    name: string
+    age: number
+    location: string
+}
+```
+Using the keyof operator on the type Person will give you a new type as shown in the following code:
+```
+type SomeNewType = keyof Person
+```
+This SomeNewType is a union of literal types ("name" | "age" | "location") that is made from the properties of type Person.
+
+Now you can create objects of type SomeNewType:
+```
+let newTypeObject: SomeNewType
+newTypeObject = "name"           // OK
+newTypeObject = "age"            // OK
+newTypeObject = "location"       // OK
+newTypeObject = "anyOtherValue"  // Error...
+```
+
+**[⬆️ Back to Top](#contents)**
+
+## keyof typeof
+**keyof typeof together on an object**
+
+As you might already know, the typeof operator gives you the type of an object. In the above example of Person interface, we already knew the type, so we just had to use the keyof operator on type Person.
+
+But what to do when we don't know the type of an object or we just have a value and not a type of that value like the following?
+```
+const car = { name: "BMW", power: "1000hp" }
+```
+This is where we use keyof typeof together.
+
+The typeof bmw gives you the type: `{ name: string, power: string }`
+
+And then keyof operator gives you the literal type union as shown in the following code:
+```
+type carType = typeof car; // {name: string, engine: string}
+
+type carLiteralType = keyof carType; //Literal type unions
+let carPropertyLiteral: carLiteralType;
+carPropertyLiteral = "name";
+console.log(carPropertyLiteral);    // name
+carPropertyLiteral = "engine";
+console.log(carPropertyLiteral);    // engine
+```
+
+**keyof typeof on an enum**
+
+In TypeScript, enums are used as types at compile-time to achieve type-safety for the constants but they are treated as objects at runtime. This is because, they are converted to plain objects once the TypeScript code is compiled to JavaScript. So, the explanation of the objects above is applicable here too. The example given by OP in the question is:
+```
+enum ColorsEnum {
+    white = '#ffffff',
+    black = '#000000',
+}
+```
+Here ColorsEnum exists as an object at runtime, not as a type. So, we need to invoke keyof typeof operators together as shown in the following code:
+```
+type Colors = keyof typeof ColorsEnum
+
+let colorLiteral: Colors
+colorLiteral = "white"  // OK
+colorLiteral = "black"  // OK
+colorLiteral = "red"    // Error...
+```
 
 **[⬆️ Back to Top](#contents)**

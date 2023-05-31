@@ -1,5 +1,7 @@
 # Contents
 1. [What is NodeJS?](#what-is-node-js)
+2. [Create a Node Server](#create-a-node-server)
+3. [What is middleware in NodeJS?](#nodejs-middleware)
 2. [What is callback hell?](#what-is-callback-hell)
 3. [What is Inversion Of Control?](#what-is-inversion-of-control)
 4. [How to escape from a callback hell?](#how-to-escape-from-a-callback-hell)
@@ -17,13 +19,107 @@
 16. [What is pipe method in NodeJS/ Stream chaining](#what-is-pipe-method-in-nodejs-stream-chaining)
 17. [What is child process](#what-is-child-process)
 18. [How to scale NodeJs applications using the cluster module?](#how-to-scale-nodejs-applications-using-the-cluster-module)
-
+19. [Why we use express.js on top of nodejs?](#why-we-use-expressjs-on-top-of-nodejs)
+20. [Error Handling in NodeJS](#error-handling-in-nodejs)
 
 ## What is node js?
 Node.js is the JavaScript runtime environment that is based on Google’s V8 Engine i.e. with the help of Node.js we can run the JavaScript outside of the browser. Other things that you may or may not have read about Node.js is that it is single-threaded, based on event-driven architecture, and non-blocking based on the I/O model.
 Node.js application runs only on a single thread and by that, It means whether that Node.js application is being used by 5 users or 5 million users, it will only run on a single thread which makes the Node.js application blockable (which means that a single line of code can block the whole app because an only single thread is being used). So, to keep the Node.js application running, asynchronous code must be used everywhere having callback functions because as we know that asynchronous code keeps on running in the background and the callback gets executed as soon as the promise gets resolved rather than synchronous code which blocks the whole application until it gets finished executing. But, we can still use synchronous code however at some place in our application and that place is before our application enters Event-loop. Event-loop is what allows Node.js applications to run non-blocking asynchronous I/O-based operations i.e, all the asynchronous code is managed and executed within the event-loop and before that, we can use our synchronous code which is in this case known as Top-Level code
 
 ![](./images/event_loop.png)
+
+**[⬆ Back to Top](#contents)**
+
+## Create a Node Server
+**Using HTTP**
+```
+const http = require('http');
+const host = 'localhost';
+const port = 3000;
+
+const server = http.createServer((req, res)=> {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end('Hello World');
+})
+
+server.listen(port, host, ()=> {
+  console.log(`Server running @ http://localhost:3000`)
+});
+```
+
+**Using Express Framework**
+```
+const express = require('express');
+const host = 'localhost';
+const port = 3000;
+
+const app = express();
+
+app.get('/', (req, res)=> {
+  res.status(200).send('Hello World')
+})
+
+app.listen(port, host, ()=> {
+  console.log(`Server running @ http://localhost:3000`)
+})
+```
+
+**[⬆ Back to Top](#contents)**
+
+## [NodeJS Middleware](https://mindmajix.com/middleware-in-node-js)
+Middleware is nothing but a function that has access to response objects, request objects, and the next middleware function. It exists in between the request and response cycles of Node.JS execution. With middleware Node.JS, we can do a multitude of things. To begin with, we can run any codes with middleware functions. Also, we can make changes in response and request objects. We can end the request and response cycle in Node.JS execution. Further, we can call the next middleware function in the queue for Node.JS execution.
+
+**Next() function**
+The next ( ) function plays a vital role in applications' request and response cycle. It is a middleware function that runs the next middleware function once it is invoked. In other words, the Next function is invoked if the current middleware function doesn’t end the request and response cycle. It is essential to note that no middleware function should be hanging in the queue.
+
+There are many types of node.JS middleware, such as application-level, router-level, built-in, error-handling, and third-party middleware.
+
+* application-level - Know that every GET and POST call needs authentication. So, if you need to authenticate GET and POST calls, you can develop authentication middleware. 
+    ```
+    router.use(middleware.isAuthenticated);
+    ```
+* router-level - By using the `express.Router()` function, this middleware supports creating and managing instances. 
+* built-in
+    - Static: They are functions that act as static assets to applications. HTML files and images are a few examples of static assets.
+    ```
+    app.use(express.static('public'));
+    ```
+    - JSON: This function processes incoming requests along with the JSON payloads.
+    ```
+    app.use(express.json());
+    ```
+    - Express.URL-encoded: This function processes incoming requests along with URL-encoded payloads.
+    ```
+    app.use(express.urlencoded({ extended: true }));
+    ```
+1. Morgan - Logger
+    ```
+    const logger = require('morgan');
+    app.use(logger('dev'))
+    ```
+2. Cors - Cross Origin Resourse Sharing
+3. Cookie Parser - Parse Cookie header and populate req.cookies with an object keyed by the cookie names. Optionally you may enable signed cookie support by passing a secret string, which assigns req.secret so it may be used by other middleware.
+4. Cache - Caching the resposne
+5. JSON - Allow json request body
+6. URL-Encoded - Process incoming request along with URL-encoded payloads
+7. Error Handling - Handle any error
+    ```
+    // error handler
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.json({
+            message: err.message,
+            error: req.app.get('env') === 'development' ? err : {}
+        })
+    });
+    ```
+8. Authorization
+    ```
+    app.use('/users', isLoggedIn, usersRouter);
+    ```
+9. Express Slowdown
+10. Express Rate Limiter
 
 **[⬆ Back to Top](#contents)**
 
@@ -525,25 +621,58 @@ Reference:
 ## [How to scale NodeJs applications using the cluster module?](https://www.youtube.com/watch?v=9RLeLngtQ3A&ab_channel=MafiaCodes)
 Since v6.0.X Node.js has included the cluster module straight out of the box, which makes it easy to set up multiple node workers that can listen on a single port. Note that this is NOT the same as the older learnboost "cluster" module available through npm.
 ```
-const http = require('http');
+const express = require('express');
 const cluster = require('cluster');
 const os = require('os');
 
+const app = express();
+// Number of cores present inside our porcessor
 let numCpu = os.cpus.length;
+// console.log('Number of Cores ', numCpu);
 
-if(cluster.isMaster){
-  numCpu = numCpu === 0 ? 2 : numCpu;
-  for(let i = 0; i< numCpu; i++){
-    cluster.fork();
-  }
-  cluster.on('exit', (worker, code, signal)=> {
-    cluster.fork();
-  })
+app.get('/', (req, res)=> {
+    for(let i=0; i< 1e8; i++){
+        // Some long running tasks
+    };
+
+    // Cluster module uses the round robin approach
+    // First worker server first, then next.. then it will go again to first when reach end
+    res.status(200).send(`Ok... ${process.pid}`);
+    
+    // Whichever worker will respond to request we need to kill that worker
+    // cluster.worker.kill();
+});
+
+/**
+ * Use cluster module to check whether the process is master process or not. If its master process then we'll simply fork a new worker process
+ * and then we'll start listening inside the worker process. Master process wont be listening for any request but only the worker processes would be listening some port
+ */
+if(cluster.isMaster) {
+    // Create as many workers as the number of cpus present inside our processor
+    // child_process.fork() method will create workers
+    // If you have a single core cpu then instead of numCPU you  can provide numbers more than 1
+    numCpu = 3;
+    for(let i = 0; i < numCpu; i++){
+        cluster.fork();
+    }
+    // If any worker died we will listen this event and print
+    cluster.on('exit', (worker, code, signal)=> {
+        console.log(`Worker ${worker.process.pid} died;`);
+        // As soon as a worker is killed or it has crashed for any reason then a new instance of that worker will be initiallized
+        // And we always have our instances up and runnning
+        cluster.fork();
+    })
 }else{
-  http.Server((req, res)=> {}).listen(3000, ()=> {
-    console.log(process.pid)
-  });
+    // Here we have the worker processes
+    // The workers will share the same port dont need to create different port for different workers
+    app.listen(3000, ()=> console.log(`Server ${process.pid} @ http://localhost:3000`))
 }
+```
+Load Test
+```
+npm i loadtest -g
+loadtest [-n requests] [-c concurrency] URL
+loadtest -n 1000 -c 100 http://localhost:3000
 ```
 Workers will compete to accept new connections, and the least loaded process is most likely to win. It works pretty well and can scale up throughput quite well on a multi-core box.
 
@@ -557,3 +686,108 @@ PS: There's a discussion between Aaron and Christopher in the comments of anothe
 
 * A shared socket model is very convenient for allowing multiple processes to listen on a single port and compete to accept new connections. Conceptually, you could think of preforked Apache doing this with the significant caveat that each process will only accept a single connection and then die. The efficiency loss for Apache is in the overhead of forking new processes and has nothing to do with the socket operations.
 * For Node.js, having N workers compete on a single socket is an extremely reasonable solution. The alternative is to set up an on-box front-end like Nginx and have that proxy traffic to the individual workers, alternating between workers for assigning new connections. The two solutions have very similar performance characteristics. And since, as I mentioned above, you will likely want to have Nginx (or an alternative) fronting your node service anyways, the choice here is really between:
+
+**[⬆ Back to Top](#contents)**
+
+## [Why we use express.js on top of nodejs?](https://intellipaat.com/blog/what-is-express-js/)
+ExpressJS is a fast, flexible, and minimalist web framework that makes building web applications easier and more efficient. It's built on top of Node.js, which is a popular platform for creating server-side applications.
+
+ExpressJS is a bridge between the front-end and back-end of a web application. It acts as the intermediary that processes data and information between the two, making it possible for users to interact with the application in real-time.
+
+This framework also includes a range of helpful features, such as middleware, routing, and templating, that make it easier to develop and maintain a web application.
+
+**Features of ExpressJS**
+
+* Routing: ExpressJS provides a simple and organized way to handle different HTTP requests and map them to specific actions. This allows you to define different paths for your website or API and specify what should happen when a user visits each one.
+* Middleware: ExpressJS uses middleware to process incoming requests before they reach their final destination. This allows you to perform tasks such as authentication, validation, and logging in a reusable and modular manner.
+* Templating: ExpressJS includes built-in support for several popular templating engines, such as EJS and Jade, which make it easier to create dynamic and interactive pages.
+
+**[⬆ Back to Top](#contents)**
+
+## [Error Handling in NodeJS](https://blog.logrocket.com/error-handling-node-js/)
+There are four fundamental strategies to report errors in Node.js:
+
+1. try…catch blocks
+2. Callbacks
+3. Promises
+4. Event emitters
+
+**try…catch blocks**
+In the try…catch method, the try block surrounds the code where the error can occur. In other words, we wrap the code for which we want to check errors; the catch block handles exceptions in this block.
+```
+const fs = require('fs');
+
+try{
+    const data = fs.readFileSync('./input.txt');
+}catch(err){
+    console.log(err)
+}
+console.log('Some important code to execute');
+```
+
+**Callbacks**
+
+A callback function (commonly used for asynchronous code) is an argument to the function in which we implement error handling.
+
+The purpose of a callback function is to check the errors before the result of the primary function is used. The callback is usually the final argument to the primary function, and it executes when an error or outcome of the operation emerges.
+```
+const fs = require('fs');
+
+fs.readFile('./input.txt', (err, data)=> {
+  if(err){
+    console.log(err);
+    return
+  }
+  console.log(data)
+});
+console.log('Some important code to execute');
+```
+
+**Promise**
+
+```
+const fs = require('fs');
+const util = require('util');
+
+const readfile = util.promisify(fs.readFile);
+
+readfile('./input.txt').then(data=> console.log(data))
+  .catch(err=> console.log(err.stack));
+
+console.log('Some important code to execute');
+```
+
+**async/await**
+```
+const fs = require('fs');
+const util = require('util');
+
+(async ()=> {
+  try{
+    const data = await readfile('./input.txt');
+  }catch(err){
+    console.log(err.stack)
+  }
+})();
+
+console.log('Some important code to execute');
+```
+
+**Event Emitter**
+
+```
+const {spawn} = require('child_process');
+
+const child = spawn('dir', ['']);
+
+child.stdout.on('data', (data)=> {
+  console.log(data);
+});
+
+child.on('error', (err)=> {
+  console.log(err.stack)
+})
+```
+
+**[⬆ Back to Top](#contents)**
+
