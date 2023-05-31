@@ -2,6 +2,7 @@
 1. [Difference between MySQL and PostgreSQL](#difference-between-mysql-and-postgresql)
 2. [What is Store Procedure?](#what-is-store-procedure)
 3. [What is SQL - Transactions](#what-is-sql---transactions)
+4. [SQL Joins](#sql-joins)
 
 
 ## Difference between MySQL and PostgreSQL
@@ -115,6 +116,7 @@ SELECT TableA.firstName,TableA.lastName,TableB.age,TableB
     FROM TableA LEFT JOIN TableB 
     ON TableA.id = TableB.id2;
 ```
+
 **Result**
 
 | first_name    | last_name | age |
