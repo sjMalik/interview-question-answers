@@ -404,8 +404,8 @@ type carLiteralType = keyof carType; //Literal type unions
 let carPropertyLiteral: carLiteralType;
 carPropertyLiteral = "name";
 console.log(carPropertyLiteral);    // name
-carPropertyLiteral = "engine";
-console.log(carPropertyLiteral);    // engine
+carPropertyLiteral = "power";
+console.log(carPropertyLiteral);    // power
 ```
 
 **keyof typeof on an enum**
