@@ -249,6 +249,16 @@ const bike = new Vehicle('Yamaha FZ', '149 cc', 'mysecret', 'private');
  */
 console.log(bike.internalSecret);
 
+class Car extends Vehicle {
+    constructor(){
+        super('BMW', '1000hp', 'S', 'P');
+    }
+
+    getProtected() {
+        return this.mySecret;
+    }
+}
+
 //Property 'privateSecret' is declared but its value is never read.
 console.log(bike.privateSecret);
 
