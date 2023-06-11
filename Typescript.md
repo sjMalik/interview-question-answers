@@ -249,6 +249,16 @@ const bike = new Vehicle('Yamaha FZ', '149 cc', 'mysecret', 'private');
  */
 console.log(bike.internalSecret);
 
+class Car extends Vehicle {
+    constructor(){
+        super('BMW', '1000hp', 'S', 'P');
+    }
+
+    getProtected() {
+        return this.mySecret;
+    }
+}
+
 //Property 'privateSecret' is declared but its value is never read.
 console.log(bike.privateSecret);
 
@@ -305,7 +315,7 @@ queue.push("1"); // ERROR : cannot push a string. Only numbers allowed
 ```
 **[⬆️ Back to Top](#contents)**
 
-## What is "Decorators" in TypeScript? 
+## [What is "Decorators" in TypeScript?](https://www.typescriptlang.org/docs/handbook/decorators.html)
 A Decorator is a special kind of declaration that can be attached to a class declaration, method, accessor, property, or parameter. Decorators are functions that take their target as the argument. With decorators we can run arbitrary code around the target execution or even entirely replace the target with a new definition.
 
 There are 4 things we can decorate in ECMAScript2016 (and Typescript): constructors, methods, properties and parameters.
@@ -394,8 +404,8 @@ type carLiteralType = keyof carType; //Literal type unions
 let carPropertyLiteral: carLiteralType;
 carPropertyLiteral = "name";
 console.log(carPropertyLiteral);    // name
-carPropertyLiteral = "engine";
-console.log(carPropertyLiteral);    // engine
+carPropertyLiteral = "power";
+console.log(carPropertyLiteral);    // power
 ```
 
 **keyof typeof on an enum**

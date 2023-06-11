@@ -334,9 +334,9 @@ module.exports.login = async function(req, res, next) {
         if(isSame){
             const isSecure = req.app.get('env') !== 'development';
             res.cookie('user_id', user.id, {
-                httpOnly: true,
-                secure: isSecure,
-                signed: true
+                httpOnly: true,   // This Boolean parameter flags the cookie to be only used by the web server.
+                secure: isSecure, // This marks the cookie to be used only with https.
+                signed: true      // This indicates if the cookie should be signed or not.
             });
             res.json({
                 id: user.id
