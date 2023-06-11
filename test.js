@@ -166,14 +166,76 @@
 
 // console.log('Some important code to execute');
 
-const {spawn} = require('child_process');
+// const {spawn} = require('child_process');
 
-const child = spawn('dir', ['']);
+// const child = spawn('dir', ['']);
 
-child.stdout.on('data', (data)=> {
-  console.log(data);
-});
+// child.stdout.on('data', (data)=> {
+//   console.log(data);
+// });
 
-child.on('error', (err)=> {
-  console.log(err.stack)
-})
+// child.on('error', (err)=> {
+//   console.log(err.stack)
+// })
+
+// const employee = {
+//   name: 'Surajit'
+// }
+
+// function invite(greeting1, greeting2) {
+//   console.log(`${greeting1} ${this.name} ${greeting2}`)
+// }
+
+// invite.call(employee, 'Hello', 'How are you?');
+// invite.apply(employee, ['Hello', 'How are you?']);
+// invite.bind(employee, 'Hello', 'How are you?')();
+
+// function getPromise(flag) {
+//   return new Promise((resolve, reject)=> {
+//     if(flag){
+//       resolve('Resolved')
+//     }else{
+//       const err = new Error('Rejected');
+//       reject(err)
+//     }
+//   })
+// }
+
+// getPromise(false)
+//   .then(data=> console.log(data))
+//   .catch(err=> console.log(err.message));
+
+// async function getAsyncPromise(flag) {
+//   if(flag) return 'Resolved';
+//   else throw new Error('rejected')
+// }
+
+// (async ()=> {
+//   try{
+//     const data = await getAsyncPromise(false);
+//   }catch(err){
+//     console.log(err.message)
+//   }
+// })();
+
+// const jwt = require('jsonwebtoken');
+
+// const payload = {
+//   name,
+//   email,
+//   org_id
+// };
+
+// const token = jwt.sign(payload, JWT_SECRET, {
+//   expiresIn: JWT_TTL
+// });
+
+// jwt.verify(token, JWT_SECRET, (err, decoded)=> {
+//   if(!err){
+//     console.log(decoded)
+//   }
+// })
+
+const numbers = [1,2,3,4,5];
+const sumOfAllNums = numbers.reduce((accm, curr)=> accm + curr);
+console.log(sumOfAllNums)

@@ -1,8 +1,9 @@
 # Contents
 1. [ES6 Concepts](#es6-concepts)
-2. [What is the difference between array.forEach() and array.map()?](#what-is-the-difference-between-arrayforeach-and-arraymap)
+2. [What is the difference between array.forEach(), array.map(), array.filter()? and array.reduce()](#what-is-the-difference-between-arrayforeach-and-arraymap)
 3. [What is closure?](#what-is-closure)
 4. [What is currying function in JavaScript ?](#what-is-currying-function-in-javascript)
+5. [Call, Apply and Bind](#call-apply-and-bind)
 
 ## ES6 Concepts
  1. Let and Const
@@ -99,14 +100,25 @@ console.log(rest)
 
 Reference: https://www.freecodecamp.org/news/var-let-and-const-whats-the-difference/
 
-## What is the difference between array.forEach() and array.map()?
+## [What is the difference between array.forEach() and array.map()?](https://dev.to/nehal_mahida/filter-map-and-reduce-in-js-when-and-where-to-use-281c)
 
 * Array.forEach() method is used to iterate over an array.
 * The Array.map() method is used to iterate over an array. In each iteration, it applies a callback function on the current array element and manipulates the value of elements. and finally returns a completely new array.
+    ```
+    const numbers = [1,2,3,4];
+    const evenNumbers = numbers.map(number=> number * 2); // [2,4,6,8]
+    ```
+* Array.filter(): As the name suggests, the filter method is used to filter the elements from an array based on a given condition.
+    ```
+    const numbers = [1,2,3,4,5];
+    const findEvenNums = numbers.filter(num=> num % 2 === 0);
+    ```
+* Array.reduce(): It boils down the array. It reduces all the elements of the array to a single value by repeatedly applying a function. It is an alternative of using a loop and updating the result for every scanned element
 ```
-const numbers = [1,2,3,4];
-const evenNumbers = numbers.map(number=> number * 2); // [2,4,6,8]
+const numbers = [1,2,3,4,5];
+const sumOfAllNums = numbers.reduce((accm, curr)=> accm + curr);
 ```
+
 
 **[⬆️ Back to Top](#contents)**
 
@@ -149,3 +161,47 @@ console.log(calculateVolume(4)(5)(6)); // 120
 
 **[⬆️ Back to Top](#contents)**
 
+## Call, Apply and Bind
+
+The following are the methods in the function prototype chain:
+* Function.prototype.apply()
+* Function.prototype.bind()
+* Function.prototype.call()
+
+**apply()**
+
+
+The apply() method is an important method of the function prototype and is used to call other functions with a provided this keyword value and arguments provided in the form of array or an array like object.
+```
+function.apply(this, [argumentsArray])
+```
+**call()**
+
+The call() method is used to call a function with a given this and arguments provided to it individually. This is very similar to apply, the only difference being that apply takes arguments in the form of an array or array-like objects, and here the arguments are provided individually.
+```
+function.call(this, arg1, arg2,...)
+```
+
+**bind()**
+
+The bind() method creates a new function that, when called, has its this keyword set to the provided value, with a given sequence of arguments preceding any provided when the new function is called.
+The bind function is much like the call function, with the main difference being that bind returns a new function whereas call does not.
+```
+const otherFun = function.bind(this, arg1, arg2,...);
+otherFun();
+```
+```
+const employee = {
+    name: 'Surajit'
+};
+
+function invite(greetings1, greetings2) {
+    console.log(`${greetings1} ${this.name} ${greetings2}`)
+};
+
+invite.call(employee, 'Hi', 'How are you?');
+invite.apply(employee, ['Hi', 'How are you?']);
+invite.bind(employee, 'Hi', 'How are you?')();
+```
+
+**[⬆️ Back to Top](#contents)**

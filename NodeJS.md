@@ -791,3 +791,56 @@ child.on('error', (err)=> {
 
 **[⬆ Back to Top](#contents)**
 
+## Create a promise response true if resolved and false if rejected. Achieve the same with async and await
+
+```
+function getPromise(flag) {
+  return new Promise((resolve, reject)=> {
+    if(flag){
+      resolve('Resolved')
+    }else{
+      const err = new Error('Rejected');
+      reject(err)
+    }
+  })
+}
+
+getPromise(false)
+  .then(data=> console.log(data))
+  .catch(err=> console.log(err.message));
+
+async function getAsyncPromise(flag) {
+  if(flag) return 'Resolved';
+  else throw new Error('rejected')
+}
+
+(async ()=> {
+  try{
+    const data = await getAsyncPromise(false);
+  }catch(err){
+    console.log(err.message)
+  }
+})();
+```
+
+## Authentication using JWT
+```
+const jwt = require('jsonwebtoken');
+
+const payload = {
+  name,
+  email,
+  org_id
+};
+
+const token = jwt.sign(payload, JWT_SECRET, {
+  expiresIn: JWT_TTL
+});
+
+jwt.verify(token, JWT_SECRET, (err, decoded)=> {
+  if(!err){
+    console.log(decoded)
+  }
+})
+```
+
