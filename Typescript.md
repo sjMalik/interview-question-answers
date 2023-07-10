@@ -274,7 +274,7 @@ Classes may have `static` members. These members aren’t associated with a part
 
 **[⬆️ Back to Top](#contents)**
 
-## Generics
+## [Generics](https://www.typescriptlang.org/docs/handbook/2/generics.html)
 ```
 function identity(arg: any): any {
   return arg;
