@@ -25,10 +25,17 @@
     a();
     ```
     - Hoisting is a JavaScript mechanism where variables and function declarations are moved to the top of their scope before code execution. So var variables are hoisted to the top of their scope and initialized with a value of undefined.
+    If you write any code like this
         ```
         console.log(a); // undefined
         var a;
         a = 'Hello'
+        ```
+        It will be executed like below
+        ```
+        var a;
+        console.log(a); //undefined beacause value not assigned yet
+        a = 'Hello';
         ```
     - Let and Const are block scoped
         - A block is a chunk of code bounded by {}. A block lives in curly braces. Anything within curly braces is a block. So a variable declared in a block with let  is only available for use within that block.

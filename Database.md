@@ -3,6 +3,7 @@
 2. [What is Store Procedure?](#what-is-store-procedure)
 3. [What is SQL - Transactions](#what-is-sql---transactions)
 4. [SQL Joins](#sql-joins)
+5. [SQL vs NoSQL]
 
 
 ## Difference between MySQL and PostgreSQL
@@ -127,3 +128,6 @@ SELECT TableA.firstName,TableA.lastName,TableB.age,TableB
 Ram        | Rakhit | NULL
 
 **[⬆ Back to Top](#contents)**
+
+## SQL vs NoSQL
+![](./images/SQL%20vs%20NoSQL.jpeg)
