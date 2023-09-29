@@ -121,6 +121,10 @@ There are many types of node.JS middleware, such as application-level, router-le
 9. Express Slowdown
 10. Express Rate Limiter
 
+**Popular Express Middleware**
+![Alt text](./images/popular_middleware.png)
+![Alt text](./images/popular_middleware_2.png)
+
 **[⬆ Back to Top](#contents)**
 
 ## What is callback hell?
